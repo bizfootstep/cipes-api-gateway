@@ -1,0 +1,29 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: cipes-auth-service
+          uri: lb://CIPES-AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+
+        - id: cipes
+          uri: lb://CIPES
+          predicates:
+            - Path=/recipe/**,/grocery/**
+          filters:
+            - AuthenticationFilter
+
+        - id: cipes-payment-service
+          uri: lb://CIPES-PAYMENT-SERVICE
+          predicates:
+            - Path=/payment/**
+          filters:
+            - AuthenticationFilter
+  application:
+    name: CIPES-API-GATEWAY
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
